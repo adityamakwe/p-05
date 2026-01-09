@@ -57,7 +57,6 @@
 //   }
 // }
 
-
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
@@ -125,4 +124,14 @@ export class LoginComponent {
         if (err.error && err.error.result && err.error.result.message) {
           this.form.message = err.error.result.message;
         } else {
-          this.form.message = "
+          this.form.message = "Server is not responding. Please try again later.";
+        }
+      }
+    );
+  }
+
+  signUp() {
+    this.router.navigateByUrl('signup');
+  }
+}
+
