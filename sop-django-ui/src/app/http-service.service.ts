@@ -32,26 +32,45 @@ export class HttpServiceService {
 
   constructor(private httpClient: HttpClient) { }
 
-  // POST with error handling
-  post(endpoint: any, bean: any, callback: any, errorCallback: any) {
+  /**
+   * POST request
+   * @param endpoint - API URL
+   * @param bean - Request body
+   * @param callback - Success callback
+   * @param errorCallback - Error callback (optional)
+   */
+  post(endpoint: any, bean: any, callback: any, errorCallback?: any) {
     this.httpClient.post(endpoint, bean).subscribe(
       (data: any) => {
-        callback(data);   // Success
+        callback(data);
       },
       (error: any) => {
-        errorCallback(error);  // Forward error to component
+        if (errorCallback) {
+          errorCallback(error);
+        } else {
+          console.error('HTTP POST Error:', error);
+        }
       }
     );
   }
 
-  // GET with error handling
-  get(endpoint: any, callback: any, errorCallback: any) {
+  /**
+   * GET request
+   * @param endpoint - API URL
+   * @param callback - Success callback
+   * @param errorCallback - Error callback (optional)
+   */
+  get(endpoint: any, callback: any, errorCallback?: any) {
     this.httpClient.get(endpoint).subscribe(
       (data: any) => {
         callback(data);
       },
       (error: any) => {
-        errorCallback(error);
+        if (errorCallback) {
+          errorCallback(error);
+        } else {
+          console.error('HTTP GET Error:', error);
+        }
       }
     );
   }
