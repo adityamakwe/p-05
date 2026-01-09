@@ -87,12 +87,11 @@ export class LoginComponent {
   this.httpService.post(
     this.endpoint,
     this.form.data,
-    (res: any) => {  // Success callback
+    (res: any) => {  // ✅ Success callback
       if (res.success) {
         this.form.message = "Login successful";
         this.form.error = false;
 
-        // Save user info
         localStorage.setItem("firstName", res.result.data.firstName);
         localStorage.setItem("roleName", res.result.data.roleName);
         localStorage.setItem("loginId", res.result.data.loginId);
@@ -107,7 +106,7 @@ export class LoginComponent {
         if (res.result.message) this.form.message = res.result.message;
       }
     },
-    (err: any) => {  // Error callback
+    (err: any) => {  // 🔥 Error callback
       this.form.error = true;
       if (err.error && err.error.result && err.error.result.message) {
         this.form.message = err.error.result.message;
