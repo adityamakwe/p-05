@@ -73,7 +73,6 @@ WSGI_APPLICATION = 'sop_django.wsgi.application'
 #     }
 # }
 
-✅ DATABASE
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
