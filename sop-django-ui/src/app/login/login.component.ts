@@ -79,39 +79,45 @@ export class LoginComponent {
   constructor(private httpService: HttpServiceService, private router: Router) { }
 
   signIn() {
-    const _self = this;
+  // Clear previous messages
+  this.form.message = '';
+  this.form.error = false;
+  this.form.inputerror = {};
 
-    // Clear previous messages
-    _self.form.message = '';
-    _self.form.inputerror = {};
-
-    this.httpService.post(this.endpoint, this.form.data, function (res: any) {
-
-      _self.form.error = !res.success;
-
-      // Handle message
-      if (res.result?.message) {
-        _self.form.message = res.result.message;
-      }
-
-      // Handle input errors
-      if (_self.form.error && res.result?.inputerror) {
-        _self.form.inputerror = res.result.inputerror;
-      }
-
-      // Handle success
+  this.httpService.post(
+    this.endpoint,
+    this.form.data,
+    (res: any) => {  // Success callback
       if (res.success) {
+        this.form.message = "Login successful";
+        this.form.error = false;
+
+        // Save user info
         localStorage.setItem("firstName", res.result.data.firstName);
         localStorage.setItem("roleName", res.result.data.roleName);
         localStorage.setItem("loginId", res.result.data.loginId);
         localStorage.setItem("id", res.result.data.id);
         localStorage.setItem('token', 'Bearer ' + res.result.token);
 
-        _self.router.navigateByUrl('dashboard');
-      }
+        this.router.navigateByUrl('dashboard');
 
-    });
-  }
+      } else {
+        this.form.error = true;
+        if (res.result.inputerror) this.form.inputerror = res.result.inputerror;
+        if (res.result.message) this.form.message = res.result.message;
+      }
+    },
+    (err: any) => {  // Error callback
+      this.form.error = true;
+      if (err.error && err.error.result && err.error.result.message) {
+        this.form.message = err.error.result.message;
+      } else {
+        this.form.message = "Server is not responding. Please try again later.";
+      }
+    }
+  );
+}
+
 
   // signUp method exists so template button works
   signUp() {
