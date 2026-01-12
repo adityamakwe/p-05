@@ -37,7 +37,12 @@ class ForgetPasswordCtl(BaseCtl):
         else:
             try:
                 user = self.get_service().find_by_login(self.form)
-                if True:
+                emailMessage = EmailMessege()
+                emailMessage.to = [user.loginId]
+                emailMessage.subject = "Forget Password"
+
+                mail_response = EmailService.send(emailMessage, "forgetPassword", user)
+                if mail_response == 1:
                     res["success"] = True
                     res["result"]["message"] = "Your password has been sent successfully"
                 else:
