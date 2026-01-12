@@ -69,11 +69,17 @@ class ChangePasswordCtl(BaseCtl):
                         user.password = self.form['newPassword']
                         user.confirmPassword = self.form['confirmPassword']
                         UserService().save(user)
-                        res["success"] = True
-                        res["result"]["message"] = "your password has been changed successfully, please check your mail..."
-                    else:
-                        res["success"] = False
-                        res["result"]["message"] = "Please Check Your Internet Connection"
+                        emailMessage = EmailMessege()
+                        emailMessage.to = [user.loginId]
+                        emailMessage.subject = "Change Password"
+
+                        mail_response = EmailService.send(emailMessage, "changePassword", user)
+                        if mail_response == 1:
+                            res["success"] = True
+                            res["result"]["message"] = "your password has been changed successfully, please check your mail..."
+                        else:
+                            res["success"] = False
+                            res["result"]["message"] = "Please Check Your Internet Connection"
                 else:
                     res["success"] = False
                     res["result"]["message"] = "Confirm Password are not matched"
